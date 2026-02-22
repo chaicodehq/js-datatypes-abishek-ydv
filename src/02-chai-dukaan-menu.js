@@ -6,12 +6,12 @@
  * jisme har item ka naam UPPERCASE mein ho aur price ke saath likha ho.
  *
  * Rules:
+ *   - Items jinka price 0 ya negative hai, unhe skip karo (filter out)
+ *   - Items jinka naam empty string hai ya string nahi hai, unhe bhi skip karo
  *   - items ek array hai of objects: [{ name: "masala chai", price: 15 }, ...]
  *   - Har item ka naam toUpperCase() karo
  *   - Format: "NAAM - Rs.PRICE" (e.g., "MASALA CHAI - Rs.15")
  *   - Saare formatted items ko " | " se join karo
- *   - Items jinka price 0 ya negative hai, unhe skip karo (filter out)
- *   - Items jinka naam empty string hai ya string nahi hai, unhe bhi skip karo
  *   - Hint: Use Array.isArray(), filter(), map(), join(), toUpperCase()
  *
  * Validation:
@@ -28,5 +28,5 @@
  *   // => ""
  */
 export function formatChaiMenu(items) {
-  // Your code here
+  return Array.isArray(items) ? items.filter(menu => menu.price>0 && menu.name.length>0 && typeof menu.name === 'string').map(item => `${item.name.toUpperCase()} - Rs.${item.price}`).join(" | ") : "";
 }

@@ -47,5 +47,24 @@
  *   //      frequentContact: "Swiggy", allAbove100: false, hasLargeTransaction: true }
  */
 export function analyzeUPITransactions(transactions) {
-  // Your code here
+  if(!Array.isArray(transactions) || transactions.length===0) return null;
+  let validTransactions = transactions.filter(transaction => transaction.amount >= 0 && transaction.type === 'debit' || transaction.type ==='credit')
+  if(validTransactions.length === 0) return null;
+  let totalCredit = validTransactions.reduce((acc, curr) => curr.type === 'credit' ? acc = acc + curr.amount : acc ,0)
+  let totalDebit = validTransactions.reduce((acc, curr) => curr.type === 'debit' ? acc = acc + curr.amount : acc ,0);
+  let netBalance = totalCredit-totalDebit;
+  let transactionCount = validTransactions.length;
+  let avgTransaction = Math.round(validTransactions.reduce((acc, curr) => acc = acc + curr.amount, 0)/transactionCount);
+  let highestTransaction = validTransactions.reduce((acc, curr) => {
+    return acc.amount > curr.amount ? acc : curr;
+  });
+  let categoryBreakdown = validTransactions.reduce((acc, curr) => {acc[curr.category] = (acc[curr.category] || 0) + curr.amount; return acc;}, {});
+  let frequentContact = validTransactions.reduce((acc, curr, index, array) => {
+    acc[curr.to] = (acc[curr.to] || 0) + 1;
+    if(index === array.length-1) return Object.entries(acc).sort((a, b) => b[1] - a[1])[0][0];
+    return acc
+  }, {});
+  let allAbove100 = validTransactions.every(curr => curr.amount>100);
+  let hasLargeTransaction = validTransactions.some(curr => curr.amount>=5000)
+  return {validTransactions, totalCredit, totalDebit, netBalance, transactionCount, avgTransaction,highestTransaction, categoryBreakdown, frequentContact, allAbove100, hasLargeTransaction};
 }

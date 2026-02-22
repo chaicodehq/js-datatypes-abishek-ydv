@@ -28,5 +28,5 @@
  *   // => "INVALID"
  */
 export function maskAadhaar(aadhaarNumber) {
-  // Your code here
+  return /^\d{12}$/.test(aadhaarNumber) && typeof aadhaarNumber === 'string' ? aadhaarNumber.replace(/\d{8}(\d{4})$/, "XXXX-XXXX-$1") : "INVALID";
 }

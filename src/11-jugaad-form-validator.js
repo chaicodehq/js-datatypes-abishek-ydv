@@ -62,5 +62,33 @@
  *   // => { isValid: false, errors: { name: "...", email: "...", ... } }
  */
 export function validateForm(formData) {
-  // Your code here
+  let {name, email, phone, age, pincode, state, agreeTerms} = formData;
+  let count = 0;
+  let reObj = {}
+
+  //checking name
+  name = name.trim();
+  if(name === "" || name.length <= 1 || name.length > 50) reObj["name"] = "Name must be 2-50 characters", count++;
+  
+  //checking email
+  if(typeof email !== 'string' || !email.includes("@") || email.indexOf('@') !== email.lastIndexOf("@") || !email.includes(".") || email.indexOf('@')>email.indexOf('.') || email.split().reduce((acc, crr) =>  crr === '@' ? acc = acc + crr : acc ,0) > 1) reObj["email"] = "Invalid email format", count++;
+  
+  //checking phone
+  if(typeof phone !=='string' || phone.length !== 10 || !Number.isInteger(Number(phone)) || !['9','8','7','6'].includes(phone[0])) reObj["phone"] = "Invalid Indian phone number", count++;
+  
+  //checking age
+  if(typeof age === 'string' ) age = Number(age);
+  if( Number.isNaN(age) || !Number.isInteger(age) || age<16 || age >100) reObj["age"] = "Age must be an integer between 16 and 100", count++;
+
+  // checking pincode
+  if(typeof pincode !== 'string' || pincode[0]==='0' || pincode.length!==6 || Number.isNaN(Number(pincode))) reObj['pincode'] = 'Invalid Indian pincode'
+
+  //checking state
+  state = state ?? '';
+  if(typeof state !=='string' || state.length === 0) reObj["state"] = "State is required", count++;
+
+  // checking agreeTerms
+  if(Boolean(agreeTerms) !== true) reObj["agreeTerms"] = "Must agree to terms", count++;
+
+  return count !== 0 ? { isValid : false, errors: reObj} : {isValid : true, errors : reObj}
 }
